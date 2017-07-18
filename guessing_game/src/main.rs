@@ -9,13 +9,12 @@ fn main() {
 
     let mut str_guess = String::new();
     while str_guess.trim() != "quit" {
-        
-        str_guess = String::new();
 
         let secret_number = rand::thread_rng().gen_range(1, 101);
 
         println!("Please input your guess");
 
+        str_guess.clear();
         io::stdin().read_line(&mut str_guess)
             .expect("Failed to read line!");
         println!("{}", str_guess);
