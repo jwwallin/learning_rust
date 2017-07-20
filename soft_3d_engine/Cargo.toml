@@ -1,0 +1,9 @@
+[package]
+name = "soft_3d_engine"
+version = "0.1.0"
+authors = ["jwwallin <jussi.w.wallin@gmail.com>"]
+
+[dependencies]
+glutin = "*"
+gl = "*"
+libc = "*"
