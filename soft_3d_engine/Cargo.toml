@@ -5,3 +5,5 @@ authors = ["jwwallin <jussi.w.wallin@gmail.com>"]
 
 [dependencies]
 gfx = "*"
+glutin = "*"
+gfx_window_glutin = "*"
