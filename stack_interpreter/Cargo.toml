@@ -1,0 +1,6 @@
+[package]
+name = "stack_interpreter"
+version = "0.1.0"
+authors = ["jwwallin <jussi.w.wallin@gmail.com>"]
+
+[dependencies]
