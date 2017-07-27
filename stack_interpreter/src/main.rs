@@ -5,16 +5,16 @@ use std::collections::LinkedList;
 use std::str::FromStr;
 
 fn main() {
-    println!("Running 32-bit integer stack interpreter.");
+    println!("Running stack interpreter.");
     run_interpreter(true);
 }
 
 
-fn run_interpreter(cmdInput:bool) {
+fn run_interpreter(cmd_input:bool) {
 
     let mut stack: Vec<String> = Vec::new();
 
-    if cmdInput {
+    if cmd_input {
 
         let mut input = String::new();
 
@@ -22,8 +22,8 @@ fn run_interpreter(cmdInput:bool) {
             if stack.is_empty() {
                 println!("Nothing on the stack");
             } else {
-                let default: i32 = 0;
-                let val = stack.front().unwrap_or(&default);
+                let default = String::from("");
+                let val = stack.last().unwrap_or(&default);
                 println!("Top element of stack: {}", val);
             }
 
@@ -44,17 +44,27 @@ fn run_interpreter(cmdInput:bool) {
                         Err(e) => {println!("{}", e); continue},
                     };
 
-                    if (val1.trim().find(".") || val2.trim().find(".")) && (parsable::<f64>(val1.trim()) && parsable::<f64>(val2.trim())) {
+                    if (val1.trim().contains(".") | val2.trim().contains(".")) & (parsable::<f64>(val1.trim()) & parsable::<f64>(val2.trim())) {
                         // one or more is float --> result should be float
-                    } else if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
+                        let val1 = val1.trim().parse::<f64>().unwrap();
+                        let val2 = val2.trim().parse::<f64>().unwrap();
+                        stack.push((val1 + val2).to_string());
+
+                    } else if (parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim())) {
                         // both are integers
-                    } else if (val1 == "true" || val1 == "false") && (val2 == "true" || val2 == "false") {
+                        let val1 = val1.trim().parse::<i64>().unwrap();
+                        let val2 = val2.trim().parse::<i64>().unwrap();
+                        stack.push((val1 + val2).to_string());
+
+                    } else if ((val1.trim() == "true") | (val1.trim() == "false")) & ((val2.trim() == "true") | (val2.trim() == "false")) {
                         // both are boolean
+                        panic!(" \"+\"-operation not allowed for boolean types");
+
                     } else {
                         // treat both as string
+                        println!("interpreted as concatenation of strings");
+                        stack.push(val2 + val1.as_str());
                     }
-
-                    stack.push((val1 + val2).to_string());
                 },
 
                 "-" => {
@@ -63,18 +73,31 @@ fn run_interpreter(cmdInput:bool) {
                         Err(e) => {println!("{}", e); continue},
                     };
 
-                    let val1 = if parsable::<f64>(val1.trim()) { val1.trim().parse::<f64>().ok().unwrap() } else { 0 as f64 };
-                    let val1 = if parsable::<i64>(val1.trim()) { val1.trim().parse::<i64>().ok().unwrap() } else { 0 as i64 };
-
                     let val2 = match stack.pop().ok_or("Not enough values on stack!") {
                         Ok(v) => v,
                         Err(e) => {println!("{}", e); continue},
                     };
 
-                    let val2 = if parsable::<f64>(val2.trim()) { val2.trim().parse::<f64>().ok().unwrap() } else { 0 as f64 };
-                    let val2 = if parsable::<i64>(val2.trim()) { val2.trim().parse::<i64>().ok().unwrap() } else { 0 as i64 };
+                    if (val1.trim().contains(".") | val2.trim().contains(".")) & (parsable::<f64>(val1.trim()) & parsable::<f64>(val2.trim())) {
+                        // one or more is float --> result should be float
+                        let val1 = val1.trim().parse::<f64>().unwrap();
+                        let val2 = val2.trim().parse::<f64>().unwrap();
+                        stack.push((val2 - val1).to_string());
 
-                    stack.push(val2 - val1);
+                    } else if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
+                        // both are integers
+                        let val1 = val1.trim().parse::<i64>().unwrap();
+                        let val2 = val2.trim().parse::<i64>().unwrap();
+                        stack.push((val2 - val1).to_string());
+
+                    } else if ((val1.trim() == "true") | (val1.trim() == "false")) & ((val2.trim() == "true") | (val2.trim() == "false")) {
+                        // both are boolean
+                        panic!(" \"-\"-operation not allowed for boolean types");
+
+                    } else {
+                        // treat both as string
+                        panic!(" \"-\"-operation not allowed for String types");
+                    }
                 },
 
                 "*" => {
@@ -83,18 +106,31 @@ fn run_interpreter(cmdInput:bool) {
                         Err(e) => {println!("{}", e); continue},
                     };
 
-                    let val1 = if parsable::<f64>(val1.trim()) { val1.trim().parse::<f64>().ok().unwrap() } else { 0 as f64 };
-                    let val1 = if parsable::<i64>(val1.trim()) { val1.trim().parse::<i64>().ok().unwrap() } else { 0 as i64 };
-
                     let val2 = match stack.pop().ok_or("Not enough values on stack!") {
                         Ok(v) => v,
                         Err(e) => {println!("{}", e); continue},
                     };
 
-                    let val2 = if parsable::<f64>(val2.trim()) { val2.trim().parse::<f64>().ok().unwrap() } else { 0 as f64 };
-                    let val2 = if parsable::<i64>(val2.trim()) { val2.trim().parse::<i64>().ok().unwrap() } else { 0 as i64 };
+                    if (val1.trim().contains(".") | val2.trim().contains(".")) & (parsable::<f64>(val1.trim()) & parsable::<f64>(val2.trim())) {
+                        // one or more is float --> result should be float
+                        let val1 = val1.trim().parse::<f64>().unwrap();
+                        let val2 = val2.trim().parse::<f64>().unwrap();
+                        stack.push((val2 * val1).to_string());
 
-                    stack.push(val1 * val2);
+                    } else if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
+                        // both are integers
+                        let val1 = val1.trim().parse::<i64>().unwrap();
+                        let val2 = val2.trim().parse::<i64>().unwrap();
+                        stack.push((val2 * val1).to_string());
+
+                    } else if ((val1.trim() == "true") | (val1.trim() == "false")) & ((val2.trim() == "true") | (val2.trim() == "false")) {
+                        // both are boolean
+                        panic!(" \"*\"-operation not allowed for boolean types");
+
+                    } else {
+                        // treat both as string
+                        panic!(" \"*\"-operation not allowed for String types");
+                    }
                 },
 
                 "/" => {
@@ -103,18 +139,31 @@ fn run_interpreter(cmdInput:bool) {
                         Err(e) => {println!("{}", e); continue},
                     };
 
-                    let val1 = if parsable::<f64>(val1.trim()) { val1.trim().parse::<f64>().ok().unwrap() } else { 0 as f64 };
-                    let val1 = if parsable::<i64>(val1.trim()) { val1.trim().parse::<i64>().ok().unwrap() } else { 0 as i64 };
-
                     let val2 = match stack.pop().ok_or("Not enough values on stack!") {
                         Ok(v) => v,
                         Err(e) => {println!("{}", e); continue},
                     };
 
-                    let val2 = if parsable::<f64>(val2.trim()) { val2.trim().parse::<f64>().ok().unwrap() } else { 0 as f64 };
-                    let val2 = if parsable::<i64>(val2.trim()) { val2.trim().parse::<i64>().ok().unwrap() } else { 0 as i64 };
+                    if (val1.trim().contains(".") | val2.trim().contains(".")) & (parsable::<f64>(val1.trim()) & parsable::<f64>(val2.trim())) {
+                        // one or more is float --> result should be float
+                        let val1 = val1.trim().parse::<f64>().unwrap();
+                        let val2 = val2.trim().parse::<f64>().unwrap();
+                        stack.push((val2 - val1).to_string());
 
-                    stack.push(val2 / val1);
+                    } else if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
+                        // both are integers
+                        let val1 = val1.trim().parse::<i64>().unwrap();
+                        let val2 = val2.trim().parse::<i64>().unwrap();
+                        stack.push((val2 - val1).to_string());
+
+                    } else if ((val1.trim() == "true") | (val1.trim() == "false")) & ((val2.trim() == "true") | (val2.trim() == "false")) {
+                        // both are boolean
+                        panic!(" \"/\"-operation not allowed for boolean types");
+
+                    } else {
+                        // treat both as string
+                        panic!(" \"/\"-operation not allowed for String types");
+                    }
                 },
 
                 "dup" => {
@@ -135,9 +184,43 @@ fn run_interpreter(cmdInput:bool) {
 
                     stack.insert(0, val1.clone());
                 },
+
+                "pop" => {
+                    let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+                        Ok(v) => v,
+                        Err(e) => {println!("{}", e); continue},
+                    };
+                },
+
+                "swp" => {
+                    let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+                        Ok(v) => v,
+                        Err(e) => {panic!("{}", e);},
+                    };
+                    let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+                        Ok(v) => v,
+                        Err(e) => {panic!("{}", e);},
+                    };
+
+                    stack.push(val1);
+                    stack.push(val2);
+                },
+
+                "nip" => {
+                    let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+                        Ok(v) => v,
+                        Err(e) => {panic!("{}", e);},
+                    };
+                    let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+                        Ok(v) => v,
+                        Err(e) => {panic!("{}", e);},
+                    };
+
+                    stack.push(val1);
+                },
                 
                 _ => {
-                    stack.push(input);
+                    stack.push(String::from(input.clone()));
                 },
             }
 
