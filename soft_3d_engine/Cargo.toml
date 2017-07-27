@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["jwwallin <jussi.w.wallin@gmail.com>"]
 
 [dependencies]
-gfx = "*"
+gl = "*"
 glutin = "*"
-gfx_window_glutin = "*"
+time = "*"
+rusttype = "*"
