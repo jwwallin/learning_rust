@@ -1,7 +1,6 @@
 
 
 use std::io;
-use std::collections::LinkedList;
 use std::str::FromStr;
 
 fn main() {
@@ -10,6 +9,7 @@ fn main() {
 }
 
 
+#[allow(unused_variables)]
 fn run_interpreter(cmd_input:bool) {
 
     let mut stack: Vec<String> = Vec::new();
@@ -50,7 +50,7 @@ fn run_interpreter(cmd_input:bool) {
                         let val2 = val2.trim().parse::<f64>().unwrap();
                         stack.push((val1 + val2).to_string());
 
-                    } else if (parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim())) {
+                    } else if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
                         // both are integers
                         let val1 = val1.trim().parse::<i64>().unwrap();
                         let val2 = val2.trim().parse::<i64>().unwrap();
@@ -185,7 +185,6 @@ fn run_interpreter(cmd_input:bool) {
                     stack.insert(0, val1.clone());
                 },
 
-<<<<<<< Updated upstream
                 "pop" => {
                     let val1 = match stack.pop().ok_or("Not enough values on stack!") {
                         Ok(v) => v,
@@ -212,10 +211,13 @@ fn run_interpreter(cmd_input:bool) {
                         Ok(v) => v,
                         Err(e) => {panic!("{}", e);},
                     };
-                    let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                        Ok(v) => v,
-                        Err(e) => {panic!("{}", e);},
-                    };
+                    
+                    {
+                        let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+                            Ok(v) => v,
+                            Err(e) => {panic!("{}", e);},
+                        };
+                    }
 
                     stack.push(val1);
                 },
