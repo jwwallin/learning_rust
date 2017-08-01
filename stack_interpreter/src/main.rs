@@ -219,6 +219,21 @@ fn run_interpreter(cmd_input:bool) {
                     stack.push(val1);
                 },
                 
+                "swp" => {
+                    let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+                        Ok(v) => v,
+                        Err(e) => {println!("{}", e); continue},
+                    };
+                    let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+                        Ok(v) => v,
+                        Err(e) => {println!("{}", e); continue},
+                    };
+
+                    stack.push(val2.clone());
+                    stack.push(val1.clone());
+                    stack.push(val2.clone());
+                },
+                
                 _ => {
                     stack.push(String::from(input.clone()));
                 },
