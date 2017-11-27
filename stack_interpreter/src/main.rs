@@ -1,28 +1,46 @@
 use std::io;
 use std::str::FromStr;
+use std::str::Lines;
+use std::iter::Enumerate;
 use std::env;
+use std::fs::File;
+use std::io::prelude::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() == 1 {
         println!("Running stack interpreter prompt.");
-        run_interpreter(true, Vec::new());
+        run_interpreter(true, String::new().lines().enumerate());
     } else if args.len() == 3 {
         let script_file = &args[1];
         let options = &args[2];
+
+        let mut f = File::open(script_file).expect("file not found");
+
+        let mut program = String::new();
+        f.read_to_string(&mut program)
+            .expect("something went wrong reading the file");
+        
+        let mut program = program.lines().enumerate();
+
+        run_interpreter(false, program);
     } else {
-        println!("Please use \"stack <file> <options>\"")
+        println!("Please use \"stack <file> <options>\" for program execution or \"stack\" for prompt execution.")
     }
 }
 
-fn run_interpreter(prompt_input: bool, mut program: Vec<String>) {
+fn run_interpreter(prompt_input: bool, mut program: Enumerate<Lines>) {
 
     let mut stack: Vec<String> = Vec::new();
     let mut input = String::new();
+    let mut previous_line = 0;
 
     while input.trim() != "end" {
         if stack.is_empty() {
             println!("Nothing on the stack");
+            if !prompt_input {
+                break;
+            }
         } else {
             let default = String::from("");
             let val = stack.last().unwrap_or(&default);
@@ -37,7 +55,18 @@ fn run_interpreter(prompt_input: bool, mut program: Vec<String>) {
                 .read_line(&mut input)
                 .expect("Failed to read line!");
         } else {
-            input = program.remove(0);
+            input = match program.next() {
+                Some(v) => {
+                        let (line, command) = v;
+                        previous_line = line;
+                        command.to_string()
+                    },
+                None    => {
+                        println!("Problem after program line: {}", previous_line);
+                        break;
+                    }
+
+            }
         }
         match input.trim() {
             "+" => {
@@ -239,7 +268,7 @@ fn run_interpreter(prompt_input: bool, mut program: Vec<String>) {
             }
 
             "pop" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+                let _val1 = match stack.pop().ok_or("Not enough values on stack!") {
                     Ok(v) => v,
                     Err(e) => {
                         println!("{}", e);
@@ -275,7 +304,7 @@ fn run_interpreter(prompt_input: bool, mut program: Vec<String>) {
                 };
 
                 {
-                    let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+                    let _val2 = match stack.pop().ok_or("Not enough values on stack!") {
                         Ok(v) => v,
                         Err(e) => {
                             panic!("{}", e);
