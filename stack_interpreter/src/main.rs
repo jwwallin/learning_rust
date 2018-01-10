@@ -21,7 +21,7 @@ fn main() {
         f.read_to_string(&mut program)
             .expect("something went wrong reading the file");
         
-        let mut program = program.lines().enumerate();
+        let program = program.lines().enumerate();
 
         run_interpreter(false, program);
     } else {
