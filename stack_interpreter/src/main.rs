@@ -10,7 +10,19 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() == 1 {
         println!("Running stack interpreter prompt.");
-        run_interpreter(true, String::new().lines().enumerate());
+        run_interpreter(true, String::new().lines());
+    } else if args.len() == 2 {
+        let script_file = &args[1];
+
+        let mut f = File::open(script_file).expect("file not found");
+
+        let mut program = String::new();
+        f.read_to_string(&mut program)
+            .expect("something went wrong reading the file");
+        
+        let program = program.lines();
+
+        run_interpreter(false, program);
     } else if args.len() == 3 {
         let script_file = &args[1];
         let options = &args[2];
@@ -21,7 +33,7 @@ fn main() {
         f.read_to_string(&mut program)
             .expect("something went wrong reading the file");
         
-        let program = program.lines().enumerate();
+        let program = program.lines();
 
         run_interpreter(false, program);
     } else {
@@ -29,8 +41,9 @@ fn main() {
     }
 }
 
-fn run_interpreter(prompt_input: bool, mut program: Enumerate<Lines>) {
+fn run_interpreter(prompt_input: bool, program: Lines) {
 
+    let mut program_stack = program.enumerate();
     let mut stack: Vec<String> = Vec::new();
     let mut input = String::new();
     let mut previous_line = 0;
@@ -52,7 +65,7 @@ fn run_interpreter(prompt_input: bool, mut program: Enumerate<Lines>) {
                 .read_line(&mut input)
                 .expect("Failed to read line!");
         } else {
-            input = match program.next() {
+            input = match program_stack.next() {
                 Some(v) => {
                         let (line, command) = v;
                         previous_line = line;
