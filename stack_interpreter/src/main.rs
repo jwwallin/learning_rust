@@ -357,13 +357,13 @@ fn run_interpreter(prompt_input: bool, mut program: Enumerate<Lines>) {
     }
 
     if stack.is_empty() {
-            println!("Nothing on the stack");
-        } else {
-            let default = String::from("");
-            stack.pop();
-            let val = stack.last().unwrap_or(&default);
-            println!("Final top element of stack: {}", val);
-        }
+        println!("Nothing on the stack");
+    } else {
+        let default = String::from("");
+        stack.pop();
+        let val = stack.last().unwrap_or(&default);
+        println!("Final top element of stack: {}", val);
+    }
     if prompt_input {
         println!("Exiting interpreter loop");
     }
