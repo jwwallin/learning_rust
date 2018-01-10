@@ -36,21 +36,18 @@ fn run_interpreter(prompt_input: bool, mut program: Enumerate<Lines>) {
     let mut previous_line = 0;
 
     while input.trim() != "end" {
+
+        if prompt_input {
+
         if stack.is_empty() {
             println!("Nothing on the stack");
-            if !prompt_input {
-                break;
-            }
         } else {
             let default = String::from("");
             let val = stack.last().unwrap_or(&default);
             println!("Top element of stack: {}", val);
         }
-
         println!("Input value or command:");
         input.clear();
-
-        if prompt_input {
             io::stdin()
                 .read_line(&mut input)
                 .expect("Failed to read line!");
