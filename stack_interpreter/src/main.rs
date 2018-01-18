@@ -1,14 +1,15 @@
 use std::io;
-use std::str::FromStr;
 use std::str::Lines;
 use std::iter::Enumerate;
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
+mod commands;
+
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.len() == 1 {
+  let args: Vec<String> = env::args().collect();
+  if args.len() == 1 {
         println!("Running stack interpreter prompt.");
         run_interpreter(true, String::new().lines());
     } else if args.len() == 2 {
@@ -59,12 +60,15 @@ fn run_interpreter(prompt_input: bool, program: Lines) {
                 let val = stack.last().unwrap_or(&default);
                 println!("Top element of stack: {}", val);
             }
+
             println!("Input value or command:");
             input.clear();
             io::stdin()
                 .read_line(&mut input)
                 .expect("Failed to read line!");
+
         } else {
+
             input = match program_stack.next() {
                 Some(v) => {
                         let (line, command) = v;
@@ -72,316 +76,93 @@ fn run_interpreter(prompt_input: bool, program: Lines) {
                         command.to_string()
                     },
                 None    => {
-                        println!("Problem after program line: {}", previous_line);
-                        break;
-                    }
-
-            }
+          println!("Problem after program line: {}", previous_line);
+          break;
         }
+      }
+    }
+    
+    match_input(input, &mut stack);
+  }
 
-        match input.trim() {
-            "+" => {
+  if stack.is_empty() {
+    println!("Nothing on the stack");
+  } else {
+    let default = String::from("");
+    stack.pop();
+    let val = stack.last().unwrap_or(&default);
+    println!("Final top element of stack: {}", val);
+  }
+  if prompt_input {
+    println!("Exiting interpreter loop");
+  }
+}
 
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-                let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
+fn match_input(input: String, stack: &mut Vec<String>) {
 
-                if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
-                    // both are integers
-                    let val1 = val1.trim().parse::<i64>().unwrap();
-                    let val2 = val2.trim().parse::<i64>().unwrap();
-                    stack.push((val1 + val2).to_string());
+  match input.trim() {
+    "+" => {
+      commands::addition(stack);
+    }
 
-                } else {
-                    // both are boolean
-                    panic!(" \"+\"-operation not allowed for given parameters");
+    "-" => {
+      commands::subtraction(stack)
+    }
 
-                }
-            }
+    "*" => {
+      commands::multiplication(stack)
+    }
 
-            "-" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
+    "/" => {
+      commands::division(stack)
+    }
 
-                let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
+    "&&" => {
+      commands::and(stack)
+    }
 
-                if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
-                    // both are integers
-                    let val1 = val1.trim().parse::<i64>().unwrap();
-                    let val2 = val2.trim().parse::<i64>().unwrap();
-                    stack.push((val2 - val1).to_string());
+    "||" => {
+      commands::or(stack)
+    }
 
-                } else {
-                    panic!(" \"-\"-operation not allowed for given parameters");
-                }
-            }
+    "!" => {
+      commands::not(stack)
+    }
 
-            "*" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
+    "dup" => {
+      commands::duplicate(stack)
+    }
 
-                let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
+    "rot" => {
+      commands::rotate(stack)
+    }
 
-                if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
-                    // both are integers
-                    let val1 = val1.trim().parse::<i64>().unwrap();
-                    let val2 = val2.trim().parse::<i64>().unwrap();
-                    stack.push((val2 * val1).to_string());
+    "pop" => {
+      commands::pop(stack)
+    }
 
-                } else {
-                    panic!(" \"*\"-operation not allowed for given parameters");
-                }
-            }
+    "swp" => {
+      commands::swap(stack)
+    }
 
-            "/" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
+    "nip" => {
+      commands::nip(stack)
+    }
 
-                let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
+    "ovr" => {
+      commands::over(stack)
+    }
 
-                if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
-                    // both are integers
-                    let val1 = val1.trim().parse::<i64>().unwrap();
-                    let val2 = val2.trim().parse::<i64>().unwrap();
-                    stack.push((val2 - val1).to_string());
+    "initWindow" => {
+      let window = stack_graphics::StackWindow::new(
+        String::from("Graphics"), 
+        200, 
+        200);
+      window.init();
+    }
 
-                } else {
-                    panic!(" \"/\"-operation not allowed for given parameters");
-                }
-            }
-
-            "&&" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-
-                let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-
-                if parsable::<bool>(val1.trim()) & parsable::<bool>(val2.trim()) {
-                    // both are boolean
-                    let val1 = val1.trim().parse::<bool>().unwrap();
-                    let val2 = val2.trim().parse::<bool>().unwrap();
-                    stack.push((val2 & val1).to_string());
-
-                } else {
-                    panic!(" \"&&\"-operation not allowed for given parameters");
-                }
-            }
-
-            "||" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-
-                let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-
-                if parsable::<bool>(val1.trim()) & parsable::<bool>(val2.trim()) {
-                    // both are boolean
-                    let val1 = val1.trim().parse::<bool>().unwrap();
-                    let val2 = val2.trim().parse::<bool>().unwrap();
-                    stack.push((val2 || val1).to_string());
-
-                } else {
-                    panic!(" \"||\"-operation not allowed for given parameters");
-                }
-            }
-
-            "!" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-
-                if parsable::<bool>(val1.trim()) {
-                    //value is boolean
-                    let val1 = val1.trim().parse::<bool>().unwrap();
-                    stack.push((!val1).to_string());
-
-                } else {
-                    panic!(" \"!\"-operation not allowed for given parameters");
-                }
-            }
-
-            "dup" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-
-                stack.push(val1.clone());
-                stack.push(val1.clone());
-            }
-
-            "rot" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-
-                stack.insert(0, val1.clone());
-            }
-
-            "pop" => {
-                let _val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-            }
-
-            "swp" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        panic!("{}", e);
-                    }
-                };
-                let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        panic!("{}", e);
-                    }
-                };
-
-                stack.push(val1);
-                stack.push(val2);
-            }
-
-            "nip" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        panic!("{}", e);
-                    }
-                };
-
-                {
-                    let _val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                        Ok(v) => v,
-                        Err(e) => {
-                            panic!("{}", e);
-                        }
-                    };
-                }
-
-                stack.push(val1);
-            }
-
-            "ovr" => {
-                let val1 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-                let val2 = match stack.pop().ok_or("Not enough values on stack!") {
-                    Ok(v) => v,
-                    Err(e) => {
-                        println!("{}", e);
-                        continue;
-                    }
-                };
-
-                stack.push(val2.clone());
-                stack.push(val1.clone());
-                stack.push(val2.clone());
-            }
-
-            _ => {
+    _ => {
                 stack.push(String::from(input.clone()));
             }
         }
     }
-
-    if stack.is_empty() {
-        println!("Nothing on the stack");
-    } else {
-        let default = String::from("");
-        stack.pop();
-        let val = stack.last().unwrap_or(&default);
-        println!("Final top element of stack: {}", val);
-    }
-    if prompt_input {
-        println!("Exiting interpreter loop");
-    }
-}
-
-fn parsable<T: FromStr>(s: &str) -> bool {
-    s.parse::<T>().is_ok()
-}
