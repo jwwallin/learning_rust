@@ -1,81 +1,81 @@
 use std::io;
 use std::str::Lines;
-use std::iter::Enumerate;
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
+mod stack_graphics;
 mod commands;
 
 fn main() {
   let args: Vec<String> = env::args().collect();
   if args.len() == 1 {
-        println!("Running stack interpreter prompt.");
-        run_interpreter(true, String::new().lines());
-    } else if args.len() == 2 {
-        let script_file = &args[1];
+    println!("Running stack interpreter prompt.");
+    run_interpreter(true, String::new().lines());
+  } else if args.len() == 2 {
+    let script_file = &args[1];
 
-        let mut f = File::open(script_file).expect("file not found");
+    let mut f = File::open(script_file).expect("file not found");
 
-        let mut program = String::new();
-        f.read_to_string(&mut program)
-            .expect("something went wrong reading the file");
-        
-        let program = program.lines();
+    let mut program = String::new();
+    f.read_to_string(&mut program)
+        .expect("something went wrong reading the file");
+    
+    let program = program.lines();
 
-        run_interpreter(false, program);
-    } else if args.len() == 3 {
-        let script_file = &args[1];
-        let options = &args[2];
+    run_interpreter(false, program);
+  } else if args.len() == 3 {
+    let script_file = &args[1];
+    // let options = &args[2];
 
-        let mut f = File::open(script_file).expect("file not found");
+    let mut f = File::open(script_file).expect("file not found");
 
-        let mut program = String::new();
-        f.read_to_string(&mut program)
-            .expect("something went wrong reading the file");
-        
-        let program = program.lines();
+    let mut program = String::new();
+    f.read_to_string(&mut program)
+      .expect("something went wrong reading the file");
+    
+    let program = program.lines();
 
-        run_interpreter(false, program);
-    } else {
-        println!("Please use \"stack <file> <options>\" for program execution or \"stack\" for prompt execution.")
-    }
+    run_interpreter(false, program);
+  } else {
+    println!("Please use \"stack <file> <options>\" for program execution or \"stack\" for prompt execution.")
+  }
 }
 
 fn run_interpreter(prompt_input: bool, program: Lines) {
 
-    let mut program_stack = program.enumerate();
-    let mut stack: Vec<String> = Vec::new();
-    let mut input = String::new();
-    let mut previous_line = 0;
+  let mut program_stack = program.enumerate();
+  let mut stack: Vec<String> = Vec::new();
+  let mut input = String::new();
+  let mut previous_line = 0;
 
-    while input.trim() != "end" {
+  while input.trim() != "end" {
 
-        if prompt_input {
+    if prompt_input {
 
-            if stack.is_empty() {
-                println!("Nothing on the stack");
-            } else {
-                let default = String::from("");
-                let val = stack.last().unwrap_or(&default);
-                println!("Top element of stack: {}", val);
-            }
+      if stack.is_empty() {
+        println!("Nothing on the stack");
+      } else {
+        let default = String::from("");
+        let val = stack.last().unwrap_or(&default);
+        println!("Top element of stack: {}", val);
+      }
 
-            println!("Input value or command:");
-            input.clear();
-            io::stdin()
-                .read_line(&mut input)
-                .expect("Failed to read line!");
+      println!("Input value or command:");
+      input.clear();
+      io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line!");
 
-        } else {
+    } else {
 
-            input = match program_stack.next() {
-                Some(v) => {
-                        let (line, command) = v;
-                        previous_line = line;
-                        command.to_string()
-                    },
-                None    => {
+      input = match program_stack.next() {
+        Some(v) => {
+          let (line, command) = v;
+          previous_line = line;
+          command.to_string()
+        },
+        None    => {
           println!("Problem after program line: {}", previous_line);
           break;
         }
@@ -162,7 +162,7 @@ fn match_input(input: String, stack: &mut Vec<String>) {
     }
 
     _ => {
-                stack.push(String::from(input.clone()));
-            }
-        }
+      stack.push(String::from(input.clone()));
     }
+  }
+}
