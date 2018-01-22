@@ -159,6 +159,11 @@ fn match_input(input: &String,
       commands::nip(stack)
     }
 
+    "tuck" => {
+      commands::swap(stack);
+      commands::over(stack);
+    }
+
     "ovr" => {
       commands::over(stack)
     }
