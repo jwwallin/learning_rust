@@ -76,7 +76,7 @@ fn run_interpreter(prompt_input: bool, program: Lines) {
           command.to_string()
         },
         None    => {
-          println!("Problem after program line: {}", previous_line);
+          println!("Next line not found after line: {}", previous_line);
           break;
         }
       }
