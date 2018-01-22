@@ -167,6 +167,10 @@ fn match_input(input: &String,
       commands::equals(stack)
     }
 
+    "!=" => {
+      commands::not_equal(stack)
+    }
+
     ">" => {
       commands::larger_than(stack)
     }
