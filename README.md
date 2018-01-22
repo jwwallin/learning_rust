@@ -5,7 +5,7 @@ TODO:
 stack_interpreter
 
 * < -command
-* > -command
+* /> -command
 * == -command
 * != -command
 * tuck -command
