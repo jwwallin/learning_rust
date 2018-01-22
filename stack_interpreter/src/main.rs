@@ -191,7 +191,7 @@ fn match_input(input: &String,
     "lineDraw" => {
       use im::Rgba;
       
-      window.drawLine(
+      window.draw_line(
         Point{ x: 10, y: 10 }, Point{ x: 100, y: 100 },
         Rgba([128,128,128,255]));
     }
