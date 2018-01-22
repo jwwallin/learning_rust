@@ -69,7 +69,7 @@ impl StackWindow {
         });
     }
 
-    pub fn drawLine(&self, p0: Point, p1: Point, color: im::Rgba<u8>) {
+    pub fn draw_line(&self, p0: Point, p1: Point, color: im::Rgba<u8>) {
         let canvas = self.image_buffer.clone();
         brezenham_line(&mut *canvas.lock().unwrap(), p0, p1, color);
     }
