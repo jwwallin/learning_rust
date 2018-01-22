@@ -167,6 +167,14 @@ fn match_input(input: &String,
       commands::equals(stack)
     }
 
+    ">" => {
+      commands::larger_than(stack)
+    }
+
+    "<" => {
+      commands::smaller_than(stack)
+    }
+
     "initWindow" => {
       window.init();
     }
