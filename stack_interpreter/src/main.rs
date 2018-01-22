@@ -163,6 +163,10 @@ fn match_input(input: &String,
       commands::over(stack)
     }
 
+    "==" => {
+      commands::equals(stack)
+    }
+
     "initWindow" => {
       window.init();
     }
