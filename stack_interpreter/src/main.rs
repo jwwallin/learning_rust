@@ -163,6 +163,22 @@ fn match_input(input: &String,
       commands::over(stack)
     }
 
+    "==" => {
+      commands::equals(stack)
+    }
+
+    "!=" => {
+      commands::not_equal(stack)
+    }
+
+    ">" => {
+      commands::larger_than(stack)
+    }
+
+    "<" => {
+      commands::smaller_than(stack)
+    }
+
     "initWindow" => {
       window.init();
     }

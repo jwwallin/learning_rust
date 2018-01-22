@@ -12,3 +12,4 @@
 */target/*
 
 stack_interpreter/Cargo\.lock
+.vscode

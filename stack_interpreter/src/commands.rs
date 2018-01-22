@@ -294,6 +294,118 @@ pub fn over(stack: &mut Vec<String>) {
   stack.push(val2.clone());
 }
 
+pub fn equals(stack: &mut Vec<String>) {
+
+  let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+      Ok(v) => v,
+      Err(e) => {
+          println!("{}", e);
+          return;
+      }
+  };
+  let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+      Ok(v) => v,
+      Err(e) => {
+          println!("{}", e);
+          return;
+      }
+  };
+
+  let val3;
+
+  if val1 == val2 {
+      val3 = true
+  } else {
+      val3 = false
+  }
+
+  stack.push(val3.to_string());  
+}
+
+pub fn not_equal(stack: &mut Vec<String>) {
+
+  let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+      Ok(v) => v,
+      Err(e) => {
+          println!("{}", e);
+          return;
+      }
+  };
+  let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+      Ok(v) => v,
+      Err(e) => {
+          println!("{}", e);
+          return;
+      }
+  };
+
+  let val3;
+
+  if !(val1 == val2) {
+      val3 = true
+  } else {
+      val3 = false
+  }
+
+  stack.push(val3.to_string());  
+}
+
+pub fn larger_than(stack: &mut Vec<String>) {
+
+  let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+      Ok(v) => v,
+      Err(e) => {
+          println!("{}", e);
+          return;
+      }
+  };
+  let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+      Ok(v) => v,
+      Err(e) => {
+          println!("{}", e);
+          return;
+      }
+  };
+
+  let val3;
+
+  if val1 > val2 {
+      val3 = true
+  } else {
+      val3 = false
+  }
+
+  stack.push(val3.to_string());
+}
+
+pub fn smaller_than(stack: &mut Vec<String>) {
+
+  let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+      Ok(v) => v,
+      Err(e) => {
+          println!("{}", e);
+          return;
+      }
+  };
+  let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+      Ok(v) => v,
+      Err(e) => {
+          println!("{}", e);
+          return;
+      }
+  };
+
+  let val3;
+
+  if val1 < val2 {
+      val3 = false
+  } else {
+      val3 = true
+  }
+
+  stack.push(val3.to_string());
+}
+
 fn parsable<T: FromStr>(s: &str) -> bool {
     s.parse::<T>().is_ok()
 }
