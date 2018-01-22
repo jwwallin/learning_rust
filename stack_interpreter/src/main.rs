@@ -1,3 +1,5 @@
+extern crate image as im;
+
 use std::io;
 use std::str::Lines;
 use std::env;
@@ -6,6 +8,9 @@ use std::io::prelude::*;
 
 mod stack_graphics;
 mod commands;
+
+use stack_graphics::StackWindow;
+use stack_graphics::Point;
 
 fn main() {
   let args: Vec<String> = env::args().collect();
@@ -48,6 +53,9 @@ fn run_interpreter(prompt_input: bool, program: Lines) {
   let mut stack: Vec<String> = Vec::new();
   let mut input = String::new();
   let mut previous_line = 0;
+  
+  let window =
+    StackWindow::new(String::from("Graphics"), 200, 200);
 
   while input.trim() != "end" {
 
@@ -82,7 +90,7 @@ fn run_interpreter(prompt_input: bool, program: Lines) {
       }
     }
     
-    match_input(input, &mut stack);
+    match_input(&input, &mut stack, &window);
   }
 
   if stack.is_empty() {
@@ -98,7 +106,9 @@ fn run_interpreter(prompt_input: bool, program: Lines) {
   }
 }
 
-fn match_input(input: String, stack: &mut Vec<String>) {
+fn match_input(input: &String, 
+  stack: &mut Vec<String>,
+  window: &StackWindow) {
 
   match input.trim() {
     "+" => {
@@ -154,11 +164,15 @@ fn match_input(input: String, stack: &mut Vec<String>) {
     }
 
     "initWindow" => {
-      let window = stack_graphics::StackWindow::new(
-        String::from("Graphics"), 
-        200, 
-        200);
       window.init();
+    }
+
+    "lineDraw" => {
+      use im::Rgba;
+      
+      window.drawLine(
+        Point{ x: 10, y: 10 }, Point{ x: 100, y: 100 },
+        Rgba([128,128,128,255]));
     }
 
     _ => {
