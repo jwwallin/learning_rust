@@ -203,6 +203,12 @@ fn match_input(input: &String,
         Rgba([128,128,128,255]));
     }
 
+    "textDraw" => {
+      use im::Rgba;
+
+      window.draw_text();
+    }
+
     "windowClear" => {
       window.clear_canvas();
     }

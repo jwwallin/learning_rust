@@ -1,29 +1,39 @@
 extern crate piston_window;
 extern crate image as im;
 extern crate vecmath;
+extern crate rusttype;
 
 use std::thread;
 use std::sync::{Arc, Mutex};
 use self::piston_window::*;
 use std::mem;
+use self::rusttype::{FontCollection, Scale, Font};
 
-#[derive(Debug, Clone)]
-pub struct StackWindow {
+#[derive(Clone)]
+pub struct StackWindow<'a> {
     image_buffer: Arc<Mutex<im::RgbaImage>>,
     name: String,
     width: u32,
-    height: u32
+    height: u32,
+    font: Font<'a>
 }
 
-impl StackWindow {
+impl<'a> StackWindow<'a> {
     
-    pub fn new(window_name: String, width: u32, height: u32) -> StackWindow {
+    pub fn new(window_name: String, width: u32, height: u32) -> StackWindow<'a> { 
+        // Load the font
+        let font_data = include_bytes!("../fonts/typewriter/TYPEWR__.TTF");
+        let collection = FontCollection::from_bytes(font_data as &[u8]);
+        // This only succeeds if collection consists of one font
+        let font = collection.into_font().unwrap();
+
         StackWindow {
             image_buffer: Arc::new(Mutex::new(
                 im::ImageBuffer::new(width, height))),
             name: window_name,
             width: width,
-            height: height
+            height: height,
+            font: font
         }
     }
 
@@ -69,11 +79,13 @@ impl StackWindow {
         });
     }
 
+    // draw a line between the given vertices using color
     pub fn draw_line(&self, p0: Point, p1: Point, color: im::Rgba<u8>) {
         let canvas = self.image_buffer.clone();
         brezenham_line(&mut *canvas.lock().unwrap(), p0, p1, color);
     }
 
+    // draw a triangle with given vertices and color
     pub fn draw_triangle(
         &self, p0: Point, p1: Point, p2: Point, color: im::Rgba<u8>) {
         let canvas = self.image_buffer.clone();
@@ -85,11 +97,13 @@ impl StackWindow {
             p0.clone(), p2.clone(), color);
     }
 
+    // draw a circle with given center point, radius and color
     pub fn draw_circle(&self, p0: Point, r: u32, color: im::Rgba<u8>) {
         let canvas = self.image_buffer.clone();
         brezenham_circle(&mut *canvas.lock().unwrap(), p0, r, color);
     }
 
+    // clear canvas with transparent black
     pub fn clear_canvas(&self) {
         let image_buffer = self.image_buffer.clone();
         let mut canvas = image_buffer.lock().unwrap();
@@ -101,8 +115,15 @@ impl StackWindow {
         }
     }
 
+    pub fn draw_text(&self) {
+        let image_buffer = self.image_buffer.clone();
+        let mut canvas = image_buffer.lock().unwrap();
+        rasterize_text(&mut canvas, &self.font, Point{ x:0, y:0 }, im::Rgba([150, 0, 0, 255]));
+    }
+
 }
 
+// use brezenham's line algorithm
 fn brezenham_line(canvas:&mut im::RgbaImage, p0: Point, p1: Point, color: im::Rgba<u8>) {
     let delta_x = (p1.x - p0.x) as f32;
     let delta_y = (p1.y - p0.y) as f32;
@@ -120,6 +141,7 @@ fn brezenham_line(canvas:&mut im::RgbaImage, p0: Point, p1: Point, color: im::Rg
     }
 }
 
+// use brezenham's circle algorithm
 fn brezenham_circle(canvas:&mut im::RgbaImage, p0: Point, r: u32, color: im::Rgba<u8>) {
     
     let x0: u32 = p0.x;
@@ -153,7 +175,34 @@ fn brezenham_circle(canvas:&mut im::RgbaImage, p0: Point, r: u32, color: im::Rgb
     }
 }
 
-#[derive(Debug, Clone)]
+fn rasterize_text(canvas: &mut im::RgbaImage, font: &Font, start: Point, color: im::Rgba<u8>) {
+
+    // The font size to use
+    let size = 3.0;
+    let scale = Scale {x: size, y: size};
+
+    // The text to render
+    let text = "This is RustType rendered into a png!";
+
+    // Transform p into rusttype Point
+    let start = rusttype::point(start.x as f32, start.y as f32);
+
+    // Loop through the glyphs in the text, positing each one on a line
+    for glyph in font.layout(text, scale, start) {
+        if let Some(bounding_box) = glyph.pixel_bounding_box() {
+            // Draw the glyph into the image per-pixel by using the draw closure
+            glyph.draw(|x, y, _v| canvas.put_pixel(
+                // Offset the position by the glyph bounding box
+                x + bounding_box.min.x as u32,
+                y + bounding_box.min.y as u32,
+                // Turn the coverage into color
+                color
+            ));
+        }
+    }
+}
+
+#[derive(Clone)]
 pub struct Point {
     pub x: u32,
     pub y: u32
