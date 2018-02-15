@@ -7,3 +7,4 @@ authors = ["jwwallin <jussi.w.wallin@gmail.com>"]
 image = "0.18.0"
 piston_window = "0.74.0"
 vecmath = "0.3.0"
+rusttype = "*"
