@@ -74,6 +74,32 @@ impl StackWindow {
         brezenham_line(&mut *canvas.lock().unwrap(), p0, p1, color);
     }
 
+    pub fn draw_triangle(
+        &self, p0: Point, p1: Point, p2: Point, color: im::Rgba<u8>) {
+        let canvas = self.image_buffer.clone();
+        brezenham_line(&mut *canvas.lock().unwrap(), 
+            p0.clone(), p1.clone(), color);
+        brezenham_line(&mut *canvas.lock().unwrap(), 
+            p1.clone(), p2.clone(), color);
+        brezenham_line(&mut *canvas.lock().unwrap(), 
+            p0.clone(), p2.clone(), color);
+    }
+
+    pub fn draw_circle(&self, p0: Point, r: u32, color: im::Rgba<u8>) {
+        let canvas = self.image_buffer.clone();
+        brezenham_circle(&mut *canvas.lock().unwrap(), p0, r, color);
+    }
+
+    pub fn clear_canvas(&self) {
+        let image_buffer = self.image_buffer.clone();
+        let mut canvas = image_buffer.lock().unwrap();
+        let (width, height) = canvas.dimensions();
+        for x in 0..width {
+            for y in 0..height {
+                canvas.put_pixel(x, y, im::Rgba([0,0,0,0]));
+            }
+        }
+    }
 
 }
 
@@ -94,7 +120,40 @@ fn brezenham_line(canvas:&mut im::RgbaImage, p0: Point, p1: Point, color: im::Rg
     }
 }
 
-#[derive(Debug)]
+fn brezenham_circle(canvas:&mut im::RgbaImage, p0: Point, r: u32, color: im::Rgba<u8>) {
+    
+    let x0: u32 = p0.x;
+    let y0:u32 = p0.y;
+    let mut x: u32 = r - 1;
+    let mut y: u32 = 0;
+    let mut dx: i32 = 1;
+    let mut dy: i32 = 1;
+    let mut err = dx - (r * 2) as i32;
+
+    while x >= y {
+        
+        canvas.put_pixel(x0 + x, y0 + y, color);
+        canvas.put_pixel(x0 + y, y0 + x, color);
+        canvas.put_pixel(x0 - y, y0 + x, color);
+        canvas.put_pixel(x0 - x, y0 + y, color);
+        canvas.put_pixel(x0 - x, y0 - y, color);
+        canvas.put_pixel(x0 - y, y0 - x, color);
+        canvas.put_pixel(x0 + y, y0 - x, color);
+        canvas.put_pixel(x0 + x, y0 - y, color);
+
+        if err <= 0 {
+            y = y + 1;
+            err += dy;
+            dy += 2;
+        } else {
+            x = x - 1;
+            dx += 2;
+            err += dx - (r * 2) as i32;
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct Point {
     pub x: u32,
     pub y: u32

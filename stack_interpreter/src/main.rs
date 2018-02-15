@@ -55,7 +55,7 @@ fn run_interpreter(prompt_input: bool, program: Lines) {
   let mut previous_line = 0;
   
   let window =
-    StackWindow::new(String::from("Graphics"), 200, 200);
+    StackWindow::new(String::from("Graphics"), 1024, 768);
 
   while input.trim() != "end" {
 
@@ -190,6 +190,19 @@ fn match_input(input: &String,
         Point{ x: 10, y: 10 }, Point{ x: 100, y: 100 },
         Rgba([128,128,128,255]));
     }
+
+    "circleDraw" => {
+      use im::Rgba;
+      
+      window.draw_circle(Point{ x: 500, y: 360 }, 150,
+        Rgba([128,128,128,255]));
+    }
+
+    "windowClear" => {
+      window.clear_canvas();
+    }
+
+
 
     _ => {
       stack.push(String::from(input.clone()));
