@@ -406,6 +406,10 @@ pub fn smaller_than(stack: &mut Vec<String>) {
   stack.push(val3.to_string());
 }
 
+pub fn loop(program: &Lines, program_stack: Enumerate<Lines>) {
+    
+}
+
 fn parsable<T: FromStr>(s: &str) -> bool {
     s.parse::<T>().is_ok()
 }
