@@ -53,7 +53,8 @@ fn run_interpreter(prompt_input: bool, program: Lines) {
   let mut stack: Vec<String> = Vec::new();
   let mut input = String::new();
   let mut previous_line = 0;
-  
+  let labels = getLabels(program);
+
   let window =
     StackWindow::new(String::from("Graphics"), 1024, 768);
 
@@ -213,4 +214,17 @@ fn match_input(input: &String,
       stack.push(String::from(input.clone()));
     }
   }
+}
+
+fn getLabels(program: & mut Vec<String>) -> HashMap<int, String> {
+  let mut labels = HashMap::new();
+  let mut program_lines = Vec<String>;
+  for (linenumber, line) in program.enumerate() {
+    if (line.starts_with("LABEL ")) {
+      labels.insert(linenumber, line);
+      continue;
+    }
+    program_lines.push(line);
+  }
+  labels
 }

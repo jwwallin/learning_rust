@@ -1,4 +1,3 @@
-
 TODO:
 
 stack_interpreter
@@ -9,4 +8,3 @@ goto-käskyn kohdalla haetaan seuraava suoritettava rivi
 branching (if/else)
 commandline input
 commandline output
-graphics
