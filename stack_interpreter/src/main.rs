@@ -16,7 +16,7 @@ fn main() {
   let args: Vec<String> = env::args().collect();
   if args.len() == 1 {
     println!("Running stack interpreter prompt.");
-    run_interpreter(true, String::new().lines());
+    run_interpreter(true, Vec::new());
   } else if args.len() == 2 {
     let script_file = &args[1];
 
@@ -26,7 +26,7 @@ fn main() {
     f.read_to_string(&mut program)
         .expect("something went wrong reading the file");
     
-    let program = program.lines();
+    let program = program.split("\n").map(|s|s.to_string()).collect();
 
     run_interpreter(false, program);
   } else if args.len() == 3 {
@@ -39,7 +39,7 @@ fn main() {
     f.read_to_string(&mut program)
       .expect("something went wrong reading the file");
     
-    let program = program.lines();
+    let program: Vec<String> = program.split("\n").map(|s|s.to_string()).collect();
 
     run_interpreter(false, program);
   } else {
@@ -47,9 +47,9 @@ fn main() {
   }
 }
 
-fn run_interpreter(prompt_input: bool, program: Lines) {
+fn run_interpreter(prompt_input: bool, program: Vec<String>) {
 
-  let mut program_stack = program.enumerate();
+  let mut program_stack = program.clone().into_iter().enumerate();
   let mut stack: Vec<String> = Vec::new();
   let mut input = String::new();
   let mut previous_line = 0;
@@ -200,6 +200,16 @@ fn match_input(input: &String,
       use im::Rgba;
       
       window.draw_circle(Point{ x: 500, y: 360 }, 150,
+        Rgba([128,128,128,255]));
+    }
+
+    "triangleDraw" => {
+      use im::Rgba;
+      
+      window.draw_triangle(
+        Point{ x: 10, y: 10 }, 
+        Point{ x: 110, y: 110 }, 
+        Point{ x: 75, y: 75 },
         Rgba([128,128,128,255]));
     }
 

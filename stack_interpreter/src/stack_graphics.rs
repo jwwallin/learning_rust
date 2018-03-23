@@ -125,8 +125,8 @@ impl<'a> StackWindow<'a> {
 
 // use brezenham's line algorithm
 fn brezenham_line(canvas:&mut im::RgbaImage, p0: Point, p1: Point, color: im::Rgba<u8>) {
-    let delta_x = (p1.x - p0.x) as f32;
-    let delta_y = (p1.y - p0.y) as f32;
+    let delta_x = (p1.x as i32 - p0.x as i32) as f32;
+    let delta_y = (p1.y as i32 - p0.y as i32) as f32;
     let delta_err = f32::abs(delta_y/delta_x);
 
     let mut error: f32 = 0.0;
