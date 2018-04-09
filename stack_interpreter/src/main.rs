@@ -232,15 +232,16 @@ fn match_input(input: &String,
   }
 }
 
-fn getLabels(program: & mut Vec<String>) -> HashMap<i64, String> {
+fn get_labels(mut program: Vec<String>) -> HashMap<i64, String> {
   let mut labels = HashMap::new();
-  let mut program_lines = Vec::new();
+  let mut program_lines: Vec<String> = Vec::new();
   for (linenumber, line) in program.clone().into_iter().enumerate() {
     if line.starts_with("LABEL ") {
       labels.insert(linenumber as i64, line);
       continue;
     }
-    program_lines.push(line);
+    program_lines.push(line.to_string());
   }
+  program = program_lines;
   labels
 }
