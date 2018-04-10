@@ -114,10 +114,10 @@ impl<'a> StackWindow<'a> {
         }
     }
 
-    pub fn draw_text(&self) {
+    pub fn draw_text(&self, text: String, start: (u32, u32), color: (u8, u8, u8)) {
         let image_buffer = self.image_buffer.clone();
         let mut canvas = image_buffer.lock().unwrap();
-        rasterize_text(&mut canvas, &self.font, Point{ x:0, y:0 }, (150, 0, 0));
+        rasterize_text(&mut canvas, text, &self.font, Point{ x:start.0, y:start.1 }, color);
     }
 
 }
@@ -179,20 +179,17 @@ fn brezenham_circle(canvas:&mut im::RgbaImage, p0: Point, r: u32, color: im::Rgb
     }
 }
 
-fn rasterize_text(canvas: &mut im::RgbaImage, font: &Font, start: Point, color: (u8, u8, u8)) {
+fn rasterize_text(canvas: &mut im::RgbaImage, text: String, font: &Font, start: Point, color: (u8, u8, u8)) {
 
     // The font size to use
     let size = 50.0;
     let scale = Scale {x: size, y: size};
 
-    // The text to render
-    let text = "Text!";
-
     // Transform p into rusttype Point
     let start = rusttype::point(start.x as f32, start.y as f32);
 
     // Loop through the glyphs in the text, positing each one on a line
-    for glyph in font.layout(text, scale, start) {
+    for glyph in font.layout(&text, scale, start) {
         if let Some(bounding_box) = glyph.pixel_bounding_box() {
 
             println!("x0:{} y0:{} x1:{} y1:{} width:{} height:{}", bounding_box.min.x, bounding_box.min.y, bounding_box.max.x, bounding_box.max.y, bounding_box.width(), bounding_box.height());
