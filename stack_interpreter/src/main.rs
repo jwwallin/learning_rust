@@ -49,6 +49,7 @@ fn main() {
 
 fn run_interpreter(prompt_input: bool, program: Vec<String>) {
 
+  let mut prompt = prompt_input;
   let mut program_stack = program.clone().into_iter().enumerate();
   let mut stack: Vec<String> = Vec::new();
   let mut input = String::new();
@@ -60,7 +61,7 @@ fn run_interpreter(prompt_input: bool, program: Vec<String>) {
 
   while input.trim() != "end" {
 
-    if prompt_input {
+    if prompt {
 
       if stack.is_empty() {
         println!("Nothing on the stack");
@@ -85,8 +86,9 @@ fn run_interpreter(prompt_input: bool, program: Vec<String>) {
           command.to_string()
         },
         None    => {
-          println!("Next line not found after line: {}", previous_line);
-          break;
+          println!("Next line not found after line: {}", previous_line + 1);
+          prompt = true;
+          continue;
         }
       }
     }
@@ -189,7 +191,7 @@ fn match_input(input: &String,
       window.init();
     }
 
-    "lineDraw" => {
+    "drawLine" => {
       use im::Rgba;
       
       window.draw_line(
@@ -197,24 +199,24 @@ fn match_input(input: &String,
         Rgba([128,128,128,255]));
     }
 
-    "circleDraw" => {
+    "drawCircle" => {
       use im::Rgba;
       
       window.draw_circle(Point{ x: 500, y: 360 }, 150,
         Rgba([128,128,128,255]));
     }
 
-    "triangleDraw" => {
+    "drawTriangle" => {
       use im::Rgba;
       
       window.draw_triangle(
         Point{ x: 10, y: 10 }, 
         Point{ x: 110, y: 110 }, 
-        Point{ x: 75, y: 75 },
+        Point{ x: 75, y: 100 },
         Rgba([128,128,128,255]));
     }
 
-    "textDraw" => {
+    "drawText" => {
       use im::Rgba;
 
       window.draw_text();
