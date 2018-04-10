@@ -408,6 +408,6 @@ pub fn jump(
     new_stack.into_iter().enumerate()
 }
 
-fn parsable<T: FromStr>(s: &str) -> bool {
+pub fn parsable<T: FromStr>(s: &str) -> bool {
     s.parse::<T>().is_ok()
 }
