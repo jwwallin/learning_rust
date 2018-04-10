@@ -388,7 +388,7 @@ pub fn smaller_than(stack: &mut Vec<String>) {
 pub fn jump(
     program: &Vec<String>,
     program_stack: &Enumerate<IntoIter<String>>,
-    labels: HashMap<i32, String>,
+    labels: HashMap<usize, String>,
     stack: &mut Vec<String>,
 ) {
     let val = match stack.pop().ok_or("Not enough values on stack!") {

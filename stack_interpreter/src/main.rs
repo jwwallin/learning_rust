@@ -29,9 +29,9 @@ fn main() {
     let program = program.split("\n").map(|s|s.to_string()).collect();
 
     run_interpreter(false, program);
-  } else if args.len() == 3 {
+  }/* else if args.len() == 3 {
     let script_file = &args[1];
-    // let options = &args[2];
+    // let options = &args[2]; // no options available yet
 
     let mut f = File::open(script_file).expect("file not found");
 
@@ -42,19 +42,19 @@ fn main() {
     let program: Vec<String> = program.split("\n").map(|s|s.to_string()).collect();
 
     run_interpreter(false, program);
-  } else {
-    println!("Please use \"stack <file> <options>\" for program execution or \"stack\" for prompt execution.")
+  }*/ else {
+    println!("Please use \"stack <file>\" for program execution or \"stack\" for prompt execution.")
   }
 }
 
 fn run_interpreter(prompt_input: bool, program: Vec<String>) {
 
   let mut prompt = prompt_input;
+  let labels = get_labels(&program); 
   let mut program_stack = program.clone().into_iter().enumerate();
   let mut stack: Vec<String> = Vec::new();
   let mut input = String::new();
   let mut previous_line = 0;
-  let labels = getLabels(program);
 
   let window =
     StackWindow::new(String::from("Graphics"), 1024, 768);
@@ -112,6 +112,8 @@ fn run_interpreter(prompt_input: bool, program: Vec<String>) {
 fn match_input(input: &String, 
   stack: &mut Vec<String>,
   window: &StackWindow) {
+
+    if input.starts_with("LABEL ") { return; }
 
   match input.trim() {
     "+" => {
@@ -234,16 +236,12 @@ fn match_input(input: &String,
   }
 }
 
-fn get_labels(mut program: Vec<String>) -> HashMap<i64, String> {
+fn get_labels(program: & Vec<String>) -> HashMap<usize, String> {
   let mut labels = HashMap::new();
-  let mut program_lines: Vec<String> = Vec::new();
   for (linenumber, line) in program.clone().into_iter().enumerate() {
     if line.starts_with("LABEL ") {
-      labels.insert(linenumber as i64, line);
-      continue;
+      labels.insert(linenumber, line.clone());
     }
-    program_lines.push(line.to_string());
   }
-  program = program_lines;
   labels
 }
