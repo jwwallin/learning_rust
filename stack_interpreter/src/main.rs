@@ -5,6 +5,8 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use std::collections::HashMap;
+use std::iter::Enumerate;
+use std::vec::IntoIter;
 
 mod stack_graphics;
 mod commands;
@@ -47,7 +49,7 @@ fn main() {
   }
 }
 
-fn run_interpreter(prompt_input: bool, program: Vec<String>) {
+fn run_interpreter(prompt_input: bool, mut program: Vec<String>) {
 
   let mut prompt = prompt_input;
   let labels = get_labels(&program); 
@@ -93,7 +95,7 @@ fn run_interpreter(prompt_input: bool, program: Vec<String>) {
       }
     }
     
-    match_input(&input, &mut stack, &window);
+    program_stack = match_input(&input, &mut program, program_stack, &labels, &mut stack, &window);
   }
 
   if stack.is_empty() {
@@ -109,11 +111,14 @@ fn run_interpreter(prompt_input: bool, program: Vec<String>) {
   }
 }
 
-fn match_input(input: &String, 
+fn match_input(input: &String,
+  program: &mut Vec<String>,
+  program_stack: Enumerate<IntoIter<String>>,
+  labels: &HashMap<String, usize>,
   stack: &mut Vec<String>,
-  window: &StackWindow) {
+  window: &StackWindow) -> Enumerate<IntoIter<String>> {
 
-    if input.starts_with("LABEL ") { return; }
+    if input.starts_with("LABEL ") { return program_stack; }
 
   match input.trim() {
     "+" => {
@@ -189,6 +194,10 @@ fn match_input(input: &String,
       commands::smaller_than(stack)
     }
 
+    "jump" => {
+      return commands::jump(program, labels, stack);
+    }
+
     "windowInit" => {
       window.init();
     }
@@ -217,14 +226,17 @@ fn match_input(input: &String,
       stack.push(String::from(input.clone()));
     }
   }
+
+  program_stack
 }
 
-fn get_labels(program: & Vec<String>) -> HashMap<usize, String> {
+fn get_labels(program: & Vec<String>) -> HashMap<String, usize> {
   let mut labels = HashMap::new();
   for (linenumber, line) in program.clone().into_iter().enumerate() {
     if line.starts_with("LABEL ") {
-      labels.insert(linenumber, line.clone());
+      labels.insert(line, linenumber);
     }
+
   }
   labels
 }

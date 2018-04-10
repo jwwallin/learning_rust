@@ -389,17 +389,25 @@ pub fn smaller_than(stack: &mut Vec<String>) {
 
 pub fn jump(
     program: &Vec<String>,
-    program_stack: &Enumerate<IntoIter<String>>,
-    labels: HashMap<usize, String>,
+    labels: &HashMap<String, usize>,
     stack: &mut Vec<String>,
-) {
+) -> Enumerate<IntoIter<String>> {
     let val = match stack.pop().ok_or("Not enough values on stack!") {
         Ok(v) => v,
         Err(e) => {
-            println!("{}", e);
-            return;
+            panic!("{}", e);
         }
     };
+
+    let val = format!("LABEL {}", val);
+    let label_index = labels.get(& val).unwrap();
+
+    let new_stack: Vec<String> = program
+                        .clone()
+                        .into_iter()
+                        .skip(*label_index)
+                        .collect();
+    new_stack.into_iter().enumerate()
 }
 
 pub fn draw_line(window: &StackWindow, stack: &mut Vec<String>){
