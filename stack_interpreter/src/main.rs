@@ -189,7 +189,7 @@ fn match_input(input: &String,
       commands::smaller_than(stack)
     }
 
-    "initWindow" => {
+    "windowInit" => {
       window.init();
     }
 
