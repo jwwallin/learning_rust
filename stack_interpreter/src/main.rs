@@ -198,6 +198,10 @@ fn match_input(input: &String,
       return commands::jump(program, labels, stack);
     }
 
+    "jump_if" => {
+      return commands::jump_if(program, program_stack, labels, stack);
+    }
+
     "windowInit" => {
       window.init();
     }

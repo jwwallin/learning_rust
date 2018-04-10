@@ -408,6 +408,26 @@ pub fn jump(
     new_stack.into_iter().enumerate()
 }
 
+pub fn jump_if(
+    program: &Vec<String>,
+    program_stack: Enumerate<IntoIter<String>>,
+    labels: &HashMap<String, usize>,
+    stack: &mut Vec<String>,
+) -> Enumerate<IntoIter<String>> {
+    let val = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            panic!("{}", e);
+        }
+    };
+    if parsable::<bool>(val.trim()){
+        if val.trim().parse::<bool>().unwrap() {
+            return jump(program, labels, stack);
+        };
+    }
+    program_stack  
+}
+
 pub fn parsable<T: FromStr>(s: &str) -> bool {
     s.parse::<T>().is_ok()
 }
