@@ -400,6 +400,6 @@ pub fn jump(
     };
 }
 
-fn parsable<T: FromStr>(s: &str) -> bool {
+pub fn parsable<T: FromStr>(s: &str) -> bool {
     s.parse::<T>().is_ok()
 }

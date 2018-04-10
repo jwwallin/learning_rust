@@ -196,27 +196,256 @@ fn match_input(input: &String,
     "drawLine" => {
       use im::Rgba;
       
-      window.draw_line(
-        Point{ x: 10, y: 10 }, Point{ x: 100, y: 100 },
-        Rgba([128,128,128,255]));
+      let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+
+      let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+      let val3 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+      let val4 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+       };
+       let val5 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+        let val6 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+        let val7 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+
+    use commands::parsable;
+    if parsable::<u32>(val1.trim()) 
+        & parsable::<u32>(val2.trim())
+        & parsable::<u32>(val3.trim())
+        & parsable::<u32>(val4.trim())
+        & parsable::<u8>(val5.trim())
+        & parsable::<u8>(val6.trim())
+        & parsable::<u8>(val7.trim()) {
+        // put values from stack to variables
+        let val1 = val1.trim().parse::<u32>().unwrap();
+        let val2 = val2.trim().parse::<u32>().unwrap();
+        let val3 = val3.trim().parse::<u32>().unwrap();
+        let val4 = val4.trim().parse::<u32>().unwrap();
+        let val5 = val5.trim().parse::<u8>().unwrap();
+        let val6 = val6.trim().parse::<u8>().unwrap();
+        let val7 = val7.trim().parse::<u8>().unwrap();
+
+        window.draw_line(
+        Point{ x: val1, y: val2 }, Point{ x: val3, y: val4 },
+        Rgba([val5,val6,val7,255]));
+        
+    } 
+    else {
+        panic!(" \"/\"-operation not allowed for given parameters");
+    }
+      
+      
     }
 
     "drawCircle" => {
       use im::Rgba;
       
-      window.draw_circle(Point{ x: 500, y: 360 }, 150,
-        Rgba([128,128,128,255]));
+      let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+
+      let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+      let val3 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+      let val4 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+       };
+       let val5 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+        let val6 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+      use commands::parsable;
+    if parsable::<u32>(val1.trim()) 
+        & parsable::<u32>(val2.trim())
+        & parsable::<u32>(val3.trim())
+        & parsable::<u8>(val4.trim())
+        & parsable::<u8>(val5.trim())
+        & parsable::<u8>(val6.trim()) {
+        // put values from stack to variables
+        let val1 = val1.trim().parse::<u32>().unwrap();
+        let val2 = val2.trim().parse::<u32>().unwrap();
+        let val3 = val3.trim().parse::<u32>().unwrap();
+        let val4 = val4.trim().parse::<u8>().unwrap();
+        let val5 = val5.trim().parse::<u8>().unwrap();
+        let val6 = val6.trim().parse::<u8>().unwrap();
+
+        window.draw_circle(Point{ x: val1, y: val2 }, val3,
+        Rgba([val4,val5,val6,255]));
+        
+    } else {
+        panic!(" \"/\"-operation not allowed for given parameters");
+    }
     }
 
     "drawTriangle" => {
       use im::Rgba;
+
+      let val1 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+      let val2 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+      let val3 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+      };
+      let val4 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+       };
+       let val5 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+        let val6 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+        let val7 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+        let val8 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+        let val9 = match stack.pop().ok_or("Not enough values on stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        }
+        };
+      use commands::parsable;
+    if parsable::<u32>(val1.trim()) 
+        & parsable::<u32>(val2.trim())
+        & parsable::<u32>(val3.trim())
+        & parsable::<u32>(val4.trim())
+        & parsable::<u32>(val5.trim())
+        & parsable::<u32>(val6.trim())
+        & parsable::<u8>(val7.trim())
+        & parsable::<u8>(val8.trim())
+        & parsable::<u8>(val9.trim()) {
+        // put values from stack to variables
+        let val1 = val1.trim().parse::<u32>().unwrap();
+        let val2 = val2.trim().parse::<u32>().unwrap();
+        let val3 = val3.trim().parse::<u32>().unwrap();
+        let val4 = val4.trim().parse::<u32>().unwrap();
+        let val5 = val5.trim().parse::<u32>().unwrap();
+        let val6 = val6.trim().parse::<u32>().unwrap();
+        let val7 = val7.trim().parse::<u8>().unwrap();
+        let val8 = val8.trim().parse::<u8>().unwrap();
+        let val9 = val9.trim().parse::<u8>().unwrap();
+
       
       window.draw_triangle(
-        Point{ x: 10, y: 10 }, 
-        Point{ x: 110, y: 110 }, 
-        Point{ x: 75, y: 100 },
-        Rgba([128,128,128,255]));
+        Point{ x: val1, y: val2 }, 
+        Point{ x: val3, y: val4 }, 
+        Point{ x: val5, y: val6 },
+        Rgba([val7,val8,val9,255]));
+        
+        }  else {
+        panic!(" \"/\"-operation not allowed for given parameters");
+    
+        }
     }
+    
+    
 
     "drawText" => {
       use im::Rgba;
