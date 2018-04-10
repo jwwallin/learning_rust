@@ -88,19 +88,18 @@ impl<'a> StackWindow<'a> {
     // draw a triangle with given vertices and color
     pub fn draw_triangle(
         &self, p0: Point, p1: Point, p2: Point, color: im::Rgba<u8>) {
-        let canvas = self.image_buffer.clone();
-        brezenham_line(&mut *canvas.lock().unwrap(), 
-            p0.clone(), p1.clone(), color);
-        brezenham_line(&mut *canvas.lock().unwrap(), 
-            p1.clone(), p2.clone(), color);
-        brezenham_line(&mut *canvas.lock().unwrap(), 
-            p0.clone(), p2.clone(), color);
+        let image_buffer = self.image_buffer.clone();
+        let mut canvas = image_buffer.lock().unwrap();
+        brezenham_line(&mut canvas, p0.clone(), p1.clone(), color);
+        brezenham_line(&mut canvas, p1.clone(), p2.clone(), color);
+        brezenham_line(&mut canvas, p0.clone(), p2.clone(), color);
     }
 
     // draw a circle with given center point, radius and color
     pub fn draw_circle(&self, p0: Point, r: u32, color: im::Rgba<u8>) {
-        let canvas = self.image_buffer.clone();
-        brezenham_circle(&mut *canvas.lock().unwrap(), p0, r, color);
+        let image_buffer = self.image_buffer.clone();
+        let mut canvas = image_buffer.lock().unwrap();
+        brezenham_circle(&mut canvas, p0, r, color);
     }
 
     // clear canvas with transparent black
@@ -118,7 +117,7 @@ impl<'a> StackWindow<'a> {
     pub fn draw_text(&self) {
         let image_buffer = self.image_buffer.clone();
         let mut canvas = image_buffer.lock().unwrap();
-        rasterize_text(&mut canvas, &self.font, Point{ x:0, y:0 }, im::Rgba([150, 0, 0, 255]));
+        rasterize_text(&mut canvas, &self.font, Point{ x:0, y:0 }, (150, 0, 0));
     }
 
 }
@@ -131,11 +130,16 @@ fn brezenham_line(canvas:&mut im::RgbaImage, p0: Point, p1: Point, color: im::Rg
 
     let mut error: f32 = 0.0;
     let mut y = p0.y;
-    for x in p0.x..p1.x {
-        canvas.put_pixel(x, y, color);
-        error = error + delta_err;
+    let mut x_coords = p0.x..p1.x;
+    if x_coords.len() == 0 {
+        x_coords = p1.x..p0.x;
+        y = p1.y;
+    }
+    for x in x_coords {
+        canvas.put_pixel(x, y as u32, color);
+        error += delta_err;
         while error >= 0.5 {
-            y = y + (delta_y.signum() as u32);
+            y += 1;
             error = error - 1.0;
         }
     }
@@ -175,14 +179,14 @@ fn brezenham_circle(canvas:&mut im::RgbaImage, p0: Point, r: u32, color: im::Rgb
     }
 }
 
-fn rasterize_text(canvas: &mut im::RgbaImage, font: &Font, start: Point, color: im::Rgba<u8>) {
+fn rasterize_text(canvas: &mut im::RgbaImage, font: &Font, start: Point, color: (u8, u8, u8)) {
 
     // The font size to use
-    let size = 3.0;
+    let size = 50.0;
     let scale = Scale {x: size, y: size};
 
     // The text to render
-    let text = "This is RustType rendered into a png!";
+    let text = "Text!";
 
     // Transform p into rusttype Point
     let start = rusttype::point(start.x as f32, start.y as f32);
@@ -190,13 +194,16 @@ fn rasterize_text(canvas: &mut im::RgbaImage, font: &Font, start: Point, color: 
     // Loop through the glyphs in the text, positing each one on a line
     for glyph in font.layout(text, scale, start) {
         if let Some(bounding_box) = glyph.pixel_bounding_box() {
+
+            println!("x0:{} y0:{} x1:{} y1:{} width:{} height:{}", bounding_box.min.x, bounding_box.min.y, bounding_box.max.x, bounding_box.max.y, bounding_box.width(), bounding_box.height());
+
             // Draw the glyph into the image per-pixel by using the draw closure
-            glyph.draw(|x, y, _v| canvas.put_pixel(
+            glyph.draw(|x, y, v| canvas.put_pixel(
                 // Offset the position by the glyph bounding box
                 x + bounding_box.min.x as u32,
-                y + bounding_box.min.y as u32,
+                y + bounding_box.max.y as u32,
                 // Turn the coverage into color
-                color
+                im::Rgba([color.0, color.1, color.2, (v * 255.0) as u8])
             ));
         }
     }
