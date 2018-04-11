@@ -1,6 +1,8 @@
 sdfs
-true
+false
 jump_if
 12
 end
 LABEL sdfs
+100
+end
