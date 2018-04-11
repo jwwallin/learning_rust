@@ -12,7 +12,6 @@ mod stack_graphics;
 mod commands;
 
 use stack_graphics::StackWindow;
-use stack_graphics::Point;
 
 fn main() {
   let args: Vec<String> = env::args().collect();
@@ -246,7 +245,7 @@ fn get_labels(program: & Vec<String>) -> HashMap<String, usize> {
   let mut labels = HashMap::new();
   for (linenumber, line) in program.clone().into_iter().enumerate() {
     if line.starts_with("LABEL ") {
-      labels.insert(line, linenumber);
+      labels.insert(line.trim().to_string(), linenumber);
     }
 
   }

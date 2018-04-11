@@ -401,7 +401,7 @@ pub fn jump(
     };
 
     let val = format!("LABEL {}", val);
-    let label_index = labels.get(& val).unwrap();
+    let label_index = labels.get(val.trim()).unwrap();
 
     let new_stack: Vec<String> = program
                         .clone()
