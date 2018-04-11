@@ -1,8 +1,5 @@
+# stack interpreter
+
+
 TODO:
-
-stack_interpreter
-
-TODO:
-
-commandline input
-commandline output
+* sample program.
