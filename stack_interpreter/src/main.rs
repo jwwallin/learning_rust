@@ -226,6 +226,14 @@ fn match_input(input: &String,
       window.clear_canvas();
     }
 
+    "consoleIn" => {
+      commands::console_in(stack);
+    }
+
+    "consoleOut" => {
+      commands::console_out(stack);
+    }
+
     _ => {
       stack.push(String::from(input.clone()));
     }

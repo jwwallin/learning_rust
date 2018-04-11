@@ -1,3 +1,4 @@
+use std::io;
 use std::str::FromStr;
 use std::iter::Enumerate;
 use std::vec::IntoIter;
@@ -755,6 +756,28 @@ pub fn draw_text(window: &StackWindow, stack: &mut Vec<String>) {
 
 }
 
-pub fn parsable<T: FromStr>(s: &str) -> bool {
+pub fn console_in(stack: &mut Vec<String>) {
+
+    let mut input = String::new();
+    input.clear();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line!");
+    stack.push(input);
+}
+
+pub fn console_out(stack: &mut Vec<String>) {
+
+    let text = match stack.pop().ok_or("No value on the stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        },
+    };
+    println!("{}", text);
+}
+
+fn parsable<T: FromStr>(s: &str) -> bool {
     s.parse::<T>().is_ok()
 }
