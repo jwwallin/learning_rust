@@ -1,9 +1,7 @@
-
-sdfsdf
-jump
+jump: sdfsdf
 12
 12
 end
-LABEL sdfsdf
+LABEL: sdfsdf
 16
 end

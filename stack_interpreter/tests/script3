@@ -1,8 +1,7 @@
-sdfs
-false
-jump_if
+true
+jump_if: sdfs
 12
 end
-LABEL sdfs
+LABEL: sdfs
 100
 end

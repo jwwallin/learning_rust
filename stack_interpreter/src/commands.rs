@@ -391,17 +391,17 @@ pub fn smaller_than(stack: &mut Vec<String>) {
 pub fn jump(
     program: &Vec<String>,
     labels: &HashMap<String, usize>,
-    stack: &mut Vec<String>,
+    input: &String,
 ) -> Enumerate<IntoIter<String>> {
-    let val = match stack.pop().ok_or("Not enough values on stack!") {
-        Ok(v) => v,
-        Err(e) => {
-            panic!("{}", e);
-        }
-    };
 
-    let val = format!("LABEL {}", val);
-    let label_index = labels.get(val.trim()).unwrap();
+    let val: Vec<String> = input.split(":").map(|s|s.to_string()).collect();
+
+    if val.len() > 2 || val[1].trim().len() == 0 {
+        panic!("Invalid label on jump!");
+        }
+
+    let val = val[1].trim();
+    let label_index = labels.get(val).unwrap();
 
     let new_stack: Vec<String> = program
                         .clone()
@@ -416,6 +416,7 @@ pub fn jump_if(
     program_stack: Enumerate<IntoIter<String>>,
     labels: &HashMap<String, usize>,
     stack: &mut Vec<String>,
+    input: &String
 ) -> Enumerate<IntoIter<String>> {
     let val = match stack.pop().ok_or("Not enough values on stack!") {
         Ok(v) => v,
@@ -425,8 +426,8 @@ pub fn jump_if(
     };
     if parsable::<bool>(val.trim()){
         if val.trim().parse::<bool>().unwrap() {
-            return jump(program, labels, stack);
-        };
+            return jump(program, labels, input);
+        }
     }
     program_stack  
 }

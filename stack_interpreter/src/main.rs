@@ -117,7 +117,14 @@ fn match_input(input: &String,
   stack: &mut Vec<String>,
   window: &StackWindow) -> Enumerate<IntoIter<String>> {
 
-    if input.starts_with("LABEL ") { return program_stack; }
+    if input.starts_with("LABEL:") { 
+      return program_stack; 
+    } else if input.starts_with("jump:") {
+      return commands::jump(program, labels, input);
+    } else if input.starts_with("jump_if:") {
+      let input = input.replace("jump_if:", "jump:");
+      return commands::jump_if(program, program_stack, labels, stack, &input);
+    }
 
   match input.trim() {
     "+" => {
@@ -193,14 +200,6 @@ fn match_input(input: &String,
       commands::smaller_than(stack)
     }
 
-    "jump" => {
-      return commands::jump(program, labels, stack);
-    }
-
-    "jump_if" => {
-      return commands::jump_if(program, program_stack, labels, stack);
-    }
-
     "windowInit" => {
       window.init();
     }
@@ -244,8 +243,14 @@ fn match_input(input: &String,
 fn get_labels(program: & Vec<String>) -> HashMap<String, usize> {
   let mut labels = HashMap::new();
   for (linenumber, line) in program.clone().into_iter().enumerate() {
-    if line.starts_with("LABEL ") {
-      labels.insert(line.trim().to_string(), linenumber);
+    if line.starts_with("LABEL:") {
+      let label: Vec<String> = line.split(":").map(|s|s.to_string()).collect();
+
+      if label.len() > 2 || label[1].trim().len() == 0 {
+          panic!("Invalid label on line {}!", linenumber);
+      };
+
+      labels.insert(label[1].trim().to_string(), linenumber);
     }
 
   }
