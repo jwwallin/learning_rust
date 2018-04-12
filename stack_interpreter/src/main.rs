@@ -30,20 +30,7 @@ fn main() {
     let program = program.split("\n").map(|s|s.to_string()).collect();
 
     run_interpreter(false, program);
-  }/* else if args.len() == 3 {
-    let script_file = &args[1];
-    // let options = &args[2]; // no options available yet
-
-    let mut f = File::open(script_file).expect("file not found");
-
-    let mut program = String::new();
-    f.read_to_string(&mut program)
-      .expect("something went wrong reading the file");
-    
-    let program: Vec<String> = program.split("\n").map(|s|s.to_string()).collect();
-
-    run_interpreter(false, program);
-  }*/ else {
+  } else {
     println!("Please use \"stack <file>\" for program execution or \"stack\" for prompt execution.")
   }
 }

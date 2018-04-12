@@ -298,10 +298,14 @@ pub fn equals(stack: &mut Vec<String>) {
 
     let val3;
 
-    if val1 == val2 {
-        val3 = true
+    if parsable::<i64>(val1.trim()) & parsable::<i64>(val1.trim()) {
+        let val1 = val1.trim().parse::<i64>().unwrap();
+        let val2 = val2.trim().parse::<i64>().unwrap();
+
+        val3 = val2 == val1;
+        
     } else {
-        val3 = false
+        panic!(" \"==\"-operation not allowed for given parameters: {} and {}", val1, val2);
     }
 
     stack.push(val3.to_string());
@@ -325,10 +329,14 @@ pub fn not_equal(stack: &mut Vec<String>) {
 
     let val3;
 
-    if !(val1 == val2) {
-        val3 = true
+    if parsable::<i64>(val1.trim()) & parsable::<i64>(val1.trim()) {
+        let val1 = val1.trim().parse::<i64>().unwrap();
+        let val2 = val2.trim().parse::<i64>().unwrap();
+
+        val3 = val2 != val1;
+        
     } else {
-        val3 = false
+        panic!(" \"!=\"-operation not allowed for given parameters: {} and {}", val1, val2);
     }
 
     stack.push(val3.to_string());
@@ -352,10 +360,14 @@ pub fn larger_than(stack: &mut Vec<String>) {
 
     let val3;
 
-    if val1 > val2 {
-        val3 = true
+    if parsable::<i64>(val1.trim()) & parsable::<i64>(val1.trim()) {
+        let val1 = val1.trim().parse::<i64>().unwrap();
+        let val2 = val2.trim().parse::<i64>().unwrap();
+
+        val3 = val2 > val1;
+        
     } else {
-        val3 = false
+        panic!(" \">\"-operation not allowed for given parameters: {} and {}", val1, val2);
     }
 
     stack.push(val3.to_string());
@@ -379,10 +391,14 @@ pub fn smaller_than(stack: &mut Vec<String>) {
 
     let val3;
 
-    if val1 < val2 {
-        val3 = false
+    if parsable::<i64>(val1.trim()) & parsable::<i64>(val1.trim()) {
+        let val1 = val1.trim().parse::<i64>().unwrap();
+        let val2 = val2.trim().parse::<i64>().unwrap();
+
+        val3 = val2 < val1;
+        
     } else {
-        val3 = true
+        panic!(" \"<\"-operation not allowed for given parameters: {} and {}", val1, val2);
     }
 
     stack.push(val3.to_string());
@@ -398,7 +414,7 @@ pub fn jump(
 
     if val.len() > 2 || val[1].trim().len() == 0 {
         panic!("Invalid label on jump!");
-        }
+    }
 
     let val = val[1].trim();
     let label_index = labels.get(val).unwrap();
