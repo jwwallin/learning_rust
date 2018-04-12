@@ -104,11 +104,20 @@ fn match_input(input: &String,
   stack: &mut Vec<String>,
   window: &StackWindow) -> Enumerate<IntoIter<String>> {
 
-    if input.starts_with("LABEL:") { 
+    if input.len() == 0 {
+      //skip empty lines
+      return program_stack;
+    } else if input.trim().starts_with("//") {
+      //skip comments
+      return program_stack;
+    } else if input.trim().starts_with("LABEL:") {
+      //skip labels because they are not commands or values
       return program_stack; 
-    } else if input.starts_with("jump:") {
+    } else if input.trim().starts_with("jump:") {
+      //process jumps
       return commands::jump(program, labels, input);
-    } else if input.starts_with("jump_if:") {
+    } else if input.trim().starts_with("jump_if:") {
+      //process conditional jumps
       let input = input.replace("jump_if:", "jump:");
       return commands::jump_if(program, program_stack, labels, stack, &input);
     }
