@@ -1,0 +1,44 @@
+//beginning of program is here
+
+// initializing window for graphics
+windowInit
+
+
+////////////// THE BEGINNING ///////////////
+LABEL: beginning
+//prompt user for percentage font size 1-200%
+Anna numero 1-200:
+consoleOut
+consoleIn
+//then check if it is [1-200]
+dup
+dup
+200
+<
+jump_if: not_valid_font_size
+1
+>
+jump_if: not_valid_font_size
+// value is valid here
+
+
+
+//////////
+// TODO: rest of program
+//////////
+
+
+
+//////////////////////////////
+// end of this program
+end
+//////////////////////////////
+
+//////////////////////////////////////////
+// tells the user the number was invalid and returns to beginning of the program
+LABEL: not_valid_font_size
+Väärä kirjasinkoko!
+consoleOut
+consoleOut
+jump: beginning
+//////////////////////////////////////////

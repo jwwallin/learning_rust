@@ -364,7 +364,7 @@ pub fn larger_than(stack: &mut Vec<String>) {
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
 
-        val3 = val2 > val1;
+        val3 = val1 > val2;
         
     } else {
         panic!(" \">\"-operation not allowed for given parameters: {} and {}", val1, val2);
@@ -395,7 +395,7 @@ pub fn smaller_than(stack: &mut Vec<String>) {
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
 
-        val3 = val2 < val1;
+        val3 = val1 < val2;
         
     } else {
         panic!(" \"<\"-operation not allowed for given parameters: {} and {}", val1, val2);
