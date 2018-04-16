@@ -208,6 +208,11 @@ fn match_input(input: &String,
       commands::draw_circle(window, stack);
     }
 
+    "drawPoint" => {
+      stack.push("1".to_string());
+      commands::draw_circle(window, stack);
+    }
+
     "drawTriangle" => {
       commands::draw_triangle(window, stack);
     }
