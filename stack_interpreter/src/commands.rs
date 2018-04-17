@@ -712,6 +712,14 @@ pub fn draw_text(window: &StackWindow, stack: &mut Vec<String>) {
         },
     };
 
+    let size = match stack.pop().ok_or("No value on the stack!") {
+        Ok(v) => v,
+        Err(e) => {
+            println!("{}", e);
+            return;
+        },
+    };
+
     let x = match stack.pop().ok_or("No value on the stack!") {
         Ok(v) => v,
         Err(e) => {
@@ -754,19 +762,21 @@ pub fn draw_text(window: &StackWindow, stack: &mut Vec<String>) {
 
     use commands::parsable;
 
-    if parsable::<u32>(x.trim()) 
+    if parsable::<u32>(size.trim()) 
+        & parsable::<u32>(x.trim()) 
         & parsable::<u32>(y.trim())
         & parsable::<u8>(red.trim())
         & parsable::<u8>(green.trim())
         & parsable::<u8>(blue.trim()) {
         
+        let size = size.trim().parse::<u32>().unwrap();
         let x = x.trim().parse::<u32>().unwrap();
         let y = y.trim().parse::<u32>().unwrap();
         let red = red.trim().parse::<u8>().unwrap();
         let green = green.trim().parse::<u8>().unwrap();
         let blue = blue.trim().parse::<u8>().unwrap();
 
-        window.draw_text(text.trim().to_string(), (x , y), (red, green, blue));
+        window.draw_text(text.trim().to_string(), size, (x , y), (red, green, blue));
     } else {
         println!("{0}, {1}, {2}, {3}, {4}, {5}", text, x, y, red, green, blue);
         panic!("Values were not of expected types: from top down expected: String, uint, uint, ushort, ushort, ushort!");

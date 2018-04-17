@@ -10,7 +10,7 @@ LABEL: beginning
 Anna numero 1-200:
 consoleOut
 consoleIn
-//then check if it is [1-200]
+// then check if it is [1-200]
 dup
 dup
 200
@@ -21,16 +21,53 @@ jump_if: not_valid_font_size
 jump_if: not_valid_font_size
 // value is valid here
 
+// put initial x coord to stack
+0
+rot
 
+// main loop of the program
+LABEL: main_loop
 
-//////////
-// TODO: rest of program
-//////////
+swp
+dup
+25
++
+rot
+rot
+ovr
 
+// put in color
+255
+255
+255
 
+// insert y coordinate
+50
+
+// set stack correctly
+rot
+rot
+rot
+rot
+rot
+rot
+rot
+
+// read input
+consoleIn
+
+// if input 0 then exit main loop
+dup
+0
+==
+jump_if: end
+
+consoleOut
+jump: main_loop
 
 //////////////////////////////
 // end of this program
+LABEL: end
 end
 //////////////////////////////
 
@@ -40,5 +77,6 @@ LABEL: not_valid_font_size
 Väärä kirjasinkoko!
 consoleOut
 consoleOut
+pop
 jump: beginning
 //////////////////////////////////////////

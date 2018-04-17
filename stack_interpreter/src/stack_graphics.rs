@@ -114,10 +114,10 @@ impl<'a> StackWindow<'a> {
         }
     }
 
-    pub fn draw_text(&self, text: String, start: (u32, u32), color: (u8, u8, u8)) {
+    pub fn draw_text(&self, text: String, size: u32, start: (u32, u32), color: (u8, u8, u8)) {
         let image_buffer = self.image_buffer.clone();
         let mut canvas = image_buffer.lock().unwrap();
-        rasterize_text(&mut canvas, text, &self.font, Point{ x:start.0, y:start.1 }, color);
+        rasterize_text(&mut canvas, text, &self.font, size, Point{ x:start.0, y:start.1 }, color);
     }
 
 }
@@ -179,10 +179,10 @@ fn brezenham_circle(canvas:&mut im::RgbaImage, p0: Point, r: u32, color: im::Rgb
     }
 }
 
-fn rasterize_text(canvas: &mut im::RgbaImage, text: String, font: &Font, start: Point, color: (u8, u8, u8)) {
+fn rasterize_text(canvas: &mut im::RgbaImage, text: String, font: &Font, size: u32, start: Point, color: (u8, u8, u8)) {
 
     // The font size to use
-    let size = 50.0;
+    let size = size as f32;
     let scale = Scale {x: size, y: size};
 
     // Transform p into rusttype Point

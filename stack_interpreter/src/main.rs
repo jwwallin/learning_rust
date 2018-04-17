@@ -67,6 +67,18 @@ fn run_interpreter(prompt_input: bool, mut program: Vec<String>) {
 
     } else {
 
+      if stack.is_empty() {
+        println!("Nothing on the stack");
+      } else {
+
+        let mut default = String::from("");
+        stack.clone().into_iter().map(|v| {
+          default += v + ",".to_string();
+        });
+        let val = stack.last().unwrap_or(&default);
+        println!("Top element of stack: {}", val);
+      }
+
       input = match program_stack.next() {
         Some(v) => {
           let (line, command) = v;
@@ -78,7 +90,8 @@ fn run_interpreter(prompt_input: bool, mut program: Vec<String>) {
           prompt = true;
           continue;
         }
-      }
+      };
+      println!("{}", &input);
     }
     
     program_stack = match_input(&input, &mut program, program_stack, &labels, &mut stack, &window);
@@ -104,7 +117,7 @@ fn match_input(input: &String,
   stack: &mut Vec<String>,
   window: &StackWindow) -> Enumerate<IntoIter<String>> {
 
-    if input.len() == 0 {
+    if input.trim().len() == 0 {
       //skip empty lines
       return program_stack;
     } else if input.trim().starts_with("//") {
