@@ -22,7 +22,7 @@ pub fn addition(stack: &mut Vec<String>) {
         }
     };
 
-    if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
+    if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
         // both are integers
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
@@ -50,7 +50,7 @@ pub fn subtraction(stack: &mut Vec<String>) {
         }
     };
 
-    if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
+    if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
         // both are integers
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
@@ -77,7 +77,7 @@ pub fn multiplication(stack: &mut Vec<String>) {
         }
     };
 
-    if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
+    if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
         // both are integers
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
@@ -104,7 +104,7 @@ pub fn division(stack: &mut Vec<String>) {
         }
     };
 
-    if parsable::<i64>(val1.trim()) & parsable::<i64>(val2.trim()) {
+    if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
         // both are integers
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
@@ -131,7 +131,7 @@ pub fn and(stack: &mut Vec<String>) {
         }
     };
 
-    if parsable::<bool>(val1.trim()) & parsable::<bool>(val2.trim()) {
+    if parsable::<bool>(val1.trim()) && parsable::<bool>(val2.trim()) {
         // both are boolean
         let val1 = val1.trim().parse::<bool>().unwrap();
         let val2 = val2.trim().parse::<bool>().unwrap();
@@ -158,7 +158,7 @@ pub fn or(stack: &mut Vec<String>) {
         }
     };
 
-    if parsable::<bool>(val1.trim()) & parsable::<bool>(val2.trim()) {
+    if parsable::<bool>(val1.trim()) && parsable::<bool>(val2.trim()) {
         // both are boolean
         let val1 = val1.trim().parse::<bool>().unwrap();
         let val2 = val2.trim().parse::<bool>().unwrap();
@@ -298,14 +298,14 @@ pub fn equals(stack: &mut Vec<String>) {
 
     let val3;
 
-    if parsable::<i64>(val1.trim()) & parsable::<i64>(val1.trim()) {
+    if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
 
         val3 = val2 == val1;
         
     } else {
-        panic!(" \"==\"-operation not allowed for given parameters: {} and {}", val1, val2);
+        val3 = false;
     }
 
     stack.push(val3.to_string());
@@ -329,14 +329,14 @@ pub fn not_equal(stack: &mut Vec<String>) {
 
     let val3;
 
-    if parsable::<i64>(val1.trim()) & parsable::<i64>(val1.trim()) {
+    if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
 
         val3 = val2 != val1;
         
     } else {
-        panic!(" \"!=\"-operation not allowed for given parameters: {} and {}", val1, val2);
+        val3 = true;
     }
 
     stack.push(val3.to_string());
@@ -360,7 +360,7 @@ pub fn larger_than(stack: &mut Vec<String>) {
 
     let val3;
 
-    if parsable::<i64>(val1.trim()) & parsable::<i64>(val1.trim()) {
+    if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
 
@@ -391,7 +391,7 @@ pub fn smaller_than(stack: &mut Vec<String>) {
 
     let val3;
 
-    if parsable::<i64>(val1.trim()) & parsable::<i64>(val1.trim()) {
+    if parsable::<i64>(val1.trim()) && parsable::<i64>(val2.trim()) {
         let val1 = val1.trim().parse::<i64>().unwrap();
         let val2 = val2.trim().parse::<i64>().unwrap();
 
@@ -504,12 +504,12 @@ pub fn draw_line(window: &StackWindow, stack: &mut Vec<String>){
 
     use commands::parsable;
     if parsable::<u32>(val1.trim()) 
-        & parsable::<u32>(val2.trim())
-        & parsable::<u32>(val3.trim())
-        & parsable::<u32>(val4.trim())
-        & parsable::<u8>(val5.trim())
-        & parsable::<u8>(val6.trim())
-        & parsable::<u8>(val7.trim()) {
+        && parsable::<u32>(val2.trim())
+        && parsable::<u32>(val3.trim())
+        && parsable::<u32>(val4.trim())
+        && parsable::<u8>(val5.trim())
+        && parsable::<u8>(val6.trim())
+        && parsable::<u8>(val7.trim()) {
         // put values from stack to variables
         let val1 = val1.trim().parse::<u32>().unwrap();
         let val2 = val2.trim().parse::<u32>().unwrap();
@@ -577,11 +577,11 @@ pub fn draw_circle(window: &StackWindow, stack: &mut Vec<String>) {
     };
     use commands::parsable;
     if parsable::<u32>(x.trim()) 
-        & parsable::<u32>(y.trim())
-        & parsable::<u32>(r.trim())
-        & parsable::<u8>(red.trim())
-        & parsable::<u8>(green.trim())
-        & parsable::<u8>(blue.trim()) {
+        && parsable::<u32>(y.trim())
+        && parsable::<u32>(r.trim())
+        && parsable::<u8>(red.trim())
+        && parsable::<u8>(green.trim())
+        && parsable::<u8>(blue.trim()) {
         // put values from stack to variables
         let x = x.trim().parse::<u32>().unwrap();
         let y = y.trim().parse::<u32>().unwrap();
@@ -666,14 +666,14 @@ pub fn draw_triangle(window: &StackWindow, stack: &mut Vec<String>) {
     };
     use commands::parsable;
     if parsable::<u32>(x0.trim()) 
-        & parsable::<u32>(y0.trim())
-        & parsable::<u32>(x1.trim())
-        & parsable::<u32>(y1.trim())
-        & parsable::<u32>(x2.trim())
-        & parsable::<u32>(y2.trim())
-        & parsable::<u8>(red.trim())
-        & parsable::<u8>(green.trim())
-        & parsable::<u8>(blue.trim()) 
+        && parsable::<u32>(y0.trim())
+        && parsable::<u32>(x1.trim())
+        && parsable::<u32>(y1.trim())
+        && parsable::<u32>(x2.trim())
+        && parsable::<u32>(y2.trim())
+        && parsable::<u8>(red.trim())
+        && parsable::<u8>(green.trim())
+        && parsable::<u8>(blue.trim()) 
         {
         // put values from stack to variables
         let x0 = x0.trim().parse::<u32>().unwrap();
@@ -763,11 +763,11 @@ pub fn draw_text(window: &StackWindow, stack: &mut Vec<String>) {
     use commands::parsable;
 
     if parsable::<u32>(size.trim()) 
-        & parsable::<u32>(x.trim()) 
-        & parsable::<u32>(y.trim())
-        & parsable::<u8>(red.trim())
-        & parsable::<u8>(green.trim())
-        & parsable::<u8>(blue.trim()) {
+        && parsable::<u32>(x.trim()) 
+        && parsable::<u32>(y.trim())
+        && parsable::<u8>(red.trim())
+        && parsable::<u8>(green.trim())
+        && parsable::<u8>(blue.trim()) {
         
         let size = size.trim().parse::<u32>().unwrap();
         let x = x.trim().parse::<u32>().unwrap();
@@ -791,7 +791,7 @@ pub fn console_in(stack: &mut Vec<String>) {
     io::stdin()
         .read_line(&mut input)
         .expect("Failed to read line!");
-    stack.push(input);
+    stack.push(input.trim().to_string());
 }
 
 pub fn console_out(stack: &mut Vec<String>) {
@@ -807,5 +807,8 @@ pub fn console_out(stack: &mut Vec<String>) {
 }
 
 fn parsable<T: FromStr>(s: &str) -> bool {
-    s.parse::<T>().is_ok()
+    match s.parse::<T>() {
+        Ok(_) => true,
+        Err(_) => false,
+    }
 }

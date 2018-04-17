@@ -72,11 +72,11 @@ fn run_interpreter(prompt_input: bool, mut program: Vec<String>) {
       } else {
 
         let mut default = String::from("");
-        stack.clone().into_iter().map(|v| {
-          default += v + ",".to_string();
-        });
-        let val = stack.last().unwrap_or(&default);
-        println!("Top element of stack: {}", val);
+        for v in stack.clone() {
+          default += &v;
+          default += ",";
+        }
+        println!("Top element of stack: {}", default);
       }
 
       input = match program_stack.next() {
@@ -247,7 +247,7 @@ fn match_input(input: &String,
     }
 
     _ => {
-      stack.push(String::from(input.clone()));
+      stack.push(String::from(input.clone().trim()));
     }
   }
 
