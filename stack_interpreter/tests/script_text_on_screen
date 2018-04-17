@@ -28,13 +28,14 @@ rot
 // main loop of the program
 LABEL: main_loop
 
+// format stack from x, y to x, y+x, x, y
+tuck
 swp
 dup
-25
+rot
 +
-rot
-rot
-ovr
+swp
+tuck
 
 // put in color
 255
@@ -51,7 +52,6 @@ rot
 rot
 rot
 rot
-rot
 
 // read input
 consoleIn
@@ -62,7 +62,7 @@ dup
 ==
 jump_if: end
 
-consoleOut
+drawText
 jump: main_loop
 
 //////////////////////////////
