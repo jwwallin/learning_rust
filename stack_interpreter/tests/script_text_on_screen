@@ -28,11 +28,13 @@ rot
 // main loop of the program
 LABEL: main_loop
 
-// format stack from x, y to x, y+x, x, y
+// format stack from x, y to x, y+x+10, x, y
 tuck
 swp
 dup
 rot
++
+10
 +
 swp
 tuck
