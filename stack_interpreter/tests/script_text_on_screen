@@ -64,6 +64,7 @@ dup
 ==
 jump_if: end
 
+// draw and return to beginning of loop
 drawText
 jump: main_loop
 
