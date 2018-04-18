@@ -15,10 +15,10 @@ dup
 dup
 200
 <
-jump_if: not_valid_font_size
+jumpIf: not_valid_font_size
 1
 >
-jump_if: not_valid_font_size
+jumpIf: not_valid_font_size
 // value is valid here
 
 // put initial x coord to stack
@@ -55,6 +55,9 @@ rot
 rot
 rot
 
+// ask user to give a letter or 0
+Anna kirjain; tai "0", jos haluat lopettaa ohjelman:
+consoleOut
 // read input
 consoleIn
 
@@ -62,7 +65,7 @@ consoleIn
 dup
 0
 ==
-jump_if: end
+jumpIf: end
 
 // draw and return to beginning of loop
 drawText

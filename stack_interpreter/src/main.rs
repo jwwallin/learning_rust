@@ -129,9 +129,9 @@ fn match_input(input: &String,
     } else if input.trim().starts_with("jump:") {
       //process jumps
       return commands::jump(program, labels, input);
-    } else if input.trim().starts_with("jump_if:") {
+    } else if input.trim().starts_with("jumpIf:") {
       //process conditional jumps
-      let input = input.replace("jump_if:", "jump:");
+      let input = input.replace("jumpIf:", "jump:");
       return commands::jump_if(program, program_stack, labels, stack, &input);
     }
 
